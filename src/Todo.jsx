@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CompleteTodos } from "./components/CompleteTodos";
 import { IncompleteTodos } from "./components/IncompleteTodos";
 import { InputTodo } from "./components/InputTodo";
@@ -38,6 +38,24 @@ export const Todo = () => {
     setIncompleteTodos(newTodos1);
     setCompleteTodos(newTodos2);
   };
+
+  useEffect(() => {
+    localStorage.setItem("incompleteTodos", JSON.stringify(incompleteTodos));
+  }, [incompleteTodos]);
+
+  // 完了タスクを保存
+  useEffect(() => {
+    localStorage.setItem("completeTodos", JSON.stringify(completeTodos));
+  }, [completeTodos]);
+
+  // 初期化時にデータを読み込み
+  useEffect(() => {
+    const storedTodos = localStorage.getItem("incompleteTodos");
+    if (storedTodos) setIncompleteTodos(JSON.parse(storedTodos));
+
+    const storedCompleteTodos = localStorage.getItem("completeTodos");
+    if (storedCompleteTodos) setCompleteTodos(JSON.parse(storedCompleteTodos));
+  }, []);
 
   return (
     <>
