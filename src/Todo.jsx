@@ -6,10 +6,16 @@ import "./styles.css";
 
 export const Todo = () => {
   const [todoText, setTodoText] = useState("");
-  const [incompleteTodos, setIncompleteTodos] = useState([]);
+  const [incompleteTodos, setIncompleteTodos] = useState(() => {
+    const storedIncompleteTodos = localStorage.getItem("incompleteTodos");
+    return storedIncompleteTodos ? JSON.parse(storedIncompleteTodos) : [];
+  })
 
-  const [completeTodos, setCompleteTodos] = useState([]);
 
+  const [completeTodos, setCompleteTodos] = useState(() => {
+    const storedCompleteTodos = localStorage.getItem("completeTodos");
+    return storedCompleteTodos ? JSON.parse(storedCompleteTodos) : [];
+  })
   const onChangeTodoText = (event) => setTodoText(event.target.value);
 
   const onClickAdd = () => {
@@ -38,24 +44,17 @@ export const Todo = () => {
     setIncompleteTodos(newTodos1);
     setCompleteTodos(newTodos2);
   };
-
+  //未完了タスクを保存
   useEffect(() => {
+    console.log("保存する未完了タスク:", incompleteTodos); //保存直前のデータ
     localStorage.setItem("incompleteTodos", JSON.stringify(incompleteTodos));
   }, [incompleteTodos]);
 
   // 完了タスクを保存
   useEffect(() => {
+    console.log("保存する完了タスク:", completeTodos); //保存直前のデータ
     localStorage.setItem("completeTodos", JSON.stringify(completeTodos));
   }, [completeTodos]);
-
-  // 初期化時にデータを読み込み
-  useEffect(() => {
-    const storedTodos = localStorage.getItem("incompleteTodos");
-    if (storedTodos) setIncompleteTodos(JSON.parse(storedTodos));
-
-    const storedCompleteTodos = localStorage.getItem("completeTodos");
-    if (storedCompleteTodos) setCompleteTodos(JSON.parse(storedCompleteTodos));
-  }, []);
 
   return (
     <>
